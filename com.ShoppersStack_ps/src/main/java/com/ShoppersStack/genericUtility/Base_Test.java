@@ -2,12 +2,13 @@ package com.ShoppersStack.genericUtility;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
@@ -15,12 +16,10 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Optional;
 
 import com.ShoppersStack.pom.Home_Page;
 import com.ShoppersStack.pom.Login_Page;
 import com.ShoppersStack.pom.Welcome_Page;
-import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 
 public class Base_Test {
 	public WebDriver driver;
@@ -73,7 +72,7 @@ public class Base_Test {
 		loginPage = new Login_Page(driver);
 		homePage = new Home_Page(driver);
 		driver.manage().window().maximize();
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(40));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(60));
 		driver.get(url);
 		
 
@@ -81,6 +80,10 @@ public class Base_Test {
 	@BeforeMethod
 	public void beforeMethod() throws IOException {
 		System.out.println("@BeforMethod");
+		
+		WebDriverWait wait=new WebDriverWait(driver, Duration.ofSeconds(40));
+		wait.until(ExpectedConditions.elementToBeClickable(welcomePage.getLoginBtn()));
+		
 		welcomePage.getLoginBtn().click();
 		loginPage.getEmailTB().sendKeys(file.readPropertyData("email"));
 		loginPage.getPasswordTB().sendKeys(file.readPropertyData("password"));
